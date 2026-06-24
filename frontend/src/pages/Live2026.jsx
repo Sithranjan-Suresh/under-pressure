@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchLiveTeams } from '../lib/api'
+import Flag from '../components/Flag'
 
 export default function Live2026() {
   const [teams, setTeams] = useState(null)
@@ -54,7 +55,7 @@ export default function Live2026() {
                 }}
               >
                 <span style={{ color: 'var(--text-muted)', width: 24 }}>{i + 1}</span>
-                <span>{t.flag_emoji}</span>
+                <Flag teamName={t.team_name} width={20} />
                 <span style={{ flex: 1 }}>{t.team_name}</span>
                 <span style={{ fontFamily: 'var(--font-mono)' }}>{t.prs ?? '—'}</span>
               </div>

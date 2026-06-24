@@ -4,6 +4,7 @@ import ResilienceCard from '../components/ResilienceCard'
 import PressureCurve from '../components/PressureCurve'
 import StageDropoff from '../components/StageDropoff'
 import TournamentTimeline from '../components/TournamentTimeline'
+import Flag from '../components/Flag'
 
 const INSIGHTS = {
   elite: (name) =>
@@ -34,7 +35,7 @@ export default function TeamDetail() {
       </Link>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, margin: '16px 0' }}>
-        <span style={{ fontSize: '3rem' }}>{team.flag_emoji}</span>
+        <Flag teamName={team.team_name} width={56} />
         <div>
           <h1 style={{ margin: 0 }}>{team.team_name}</h1>
           <span style={{ color: 'var(--text-muted)' }}>

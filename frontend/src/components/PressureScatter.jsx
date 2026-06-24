@@ -9,6 +9,7 @@ import {
   Tooltip,
   Cell,
 } from 'recharts'
+import { getFlagUrl } from '../lib/flags'
 
 const QUADRANT_COLORS = {
   elite: 'var(--elite)',
@@ -31,8 +32,9 @@ function CustomTooltip({ active, payload }) {
         fontSize: 13,
       }}
     >
-      <div style={{ fontFamily: 'var(--font-display)', marginBottom: 4 }}>
-        {team.flag_emoji} {team.team_name} ({team.tournament})
+      <div style={{ fontFamily: 'var(--font-display)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+        {getFlagUrl(team.team_name) && <img src={getFlagUrl(team.team_name)} alt="" width={18} />}
+        {team.team_name} ({team.tournament})
       </div>
       <div style={{ fontFamily: 'var(--font-mono)' }}>PRS: {team.prs ?? '—'}</div>
       <div style={{ fontFamily: 'var(--font-mono)' }}>Adj PRS: {team.adj_prs ?? '—'}</div>
@@ -115,11 +117,9 @@ export default function PressureScatter({ teams, onTeamClick, prsMedian, ppiMedi
             label={(props) => {
               const { x, y, payload } = props
               if (!payload) return null
-              return (
-                <text x={x} y={y - 12} textAnchor="middle" fontSize={11} fill="var(--text-muted)">
-                  {payload.flag_emoji}
-                </text>
-              )
+              const flagUrl = getFlagUrl(payload.team_name)
+              if (!flagUrl) return null
+              return <image href={flagUrl} x={x - 8} y={y - 22} width={16} height={12} />
             }}
           >
             {plotData.map((t) => {

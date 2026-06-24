@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTeams } from '../hooks/useTeams'
 import PressureScatter from '../components/PressureScatter'
+import Flag from '../components/Flag'
 
 const QUADRANT_COLORS = {
   elite: 'var(--elite)',
@@ -153,7 +154,7 @@ export default function Home() {
                 }}
               >
                 <span style={{ color: 'var(--text-muted)', width: 24 }}>{i + 1}</span>
-                <span>{t.flag_emoji}</span>
+                <Flag teamName={t.team_name} width={20} />
                 <span style={{ flex: 1 }}>
                   {t.team_name} <span style={{ color: 'var(--text-muted)' }}>({t.tournament})</span>
                   {t.low_sample_warning && (
