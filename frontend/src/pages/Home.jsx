@@ -65,6 +65,24 @@ export default function Home() {
         and who collapses.
       </p>
 
+      <div
+        style={{
+          background: 'var(--accent-dim)',
+          border: '1px solid var(--accent-border)',
+          borderRadius: 8,
+          padding: '10px 14px',
+          margin: '12px 0',
+          fontSize: 13,
+          color: 'var(--text-primary)',
+          maxWidth: 640,
+        }}
+      >
+        <strong>PRS measures who generates value while losing — not who wins.</strong> A team
+        that rarely trailed (because they were usually ahead or level) can rank low here even if
+        they won the tournament — that's a small-sample / low-opportunity effect, not the model
+        breaking. Look for the ⚠ markers below.
+      </div>
+
       <div style={{ margin: '16px 0' }}>
         {['All', '2022', '2018'].map((opt) => (
           <button
@@ -138,6 +156,22 @@ export default function Home() {
                 <span>{t.flag_emoji}</span>
                 <span style={{ flex: 1 }}>
                   {t.team_name} <span style={{ color: 'var(--text-muted)' }}>({t.tournament})</span>
+                  {t.low_sample_warning && (
+                    <span
+                      title={`Small losing-state sample (${t.losing_sample_size} actions) — PRS here is noisier than usual.`}
+                      style={{ marginLeft: 6, color: 'var(--neutral)', cursor: 'help' }}
+                    >
+                      ⚠
+                    </span>
+                  )}
+                  {t.surprising_result_note && (
+                    <span
+                      title={t.surprising_result_note}
+                      style={{ marginLeft: 6, color: 'var(--accent)', cursor: 'help' }}
+                    >
+                      ⓘ
+                    </span>
+                  )}
                 </span>
                 <span
                   style={{

@@ -43,6 +43,28 @@ export default function TeamDetail() {
         </div>
       </div>
 
+      {(team.surprising_result_note || team.low_sample_warning) && (
+        <div
+          style={{
+            background: 'var(--neutral-dim)',
+            border: '1px solid var(--neutral)',
+            borderRadius: 10,
+            padding: 16,
+            marginBottom: 24,
+          }}
+        >
+          {team.surprising_result_note ? (
+            <p style={{ margin: 0 }}>⚠ {team.surprising_result_note}</p>
+          ) : (
+            <p style={{ margin: 0 }}>
+              ⚠ This PRS is based on a small losing-state sample ({team.losing_sample_size}{' '}
+              actions across {team.matches_played} matches) — {team.team_name} rarely trailed, so
+              this score is noisier than for teams who spent more time behind.
+            </p>
+          )}
+        </div>
+      )}
+
       <div
         style={{
           display: 'grid',
@@ -54,7 +76,7 @@ export default function TeamDetail() {
           <ResilienceCard
             prs={team.prs}
             adjPrs={team.adj_prs}
-            prsRank={team.prs_rank}
+            prsRank={team.combined_prs_rank}
             totalTeams={64}
             quadrant={team.quadrant}
           />

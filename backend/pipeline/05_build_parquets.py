@@ -20,6 +20,13 @@ GAME_STATES = [
     ("losing_big", "Losing Big"),
 ]
 
+# A team that rarely trailed (e.g. a tournament winner who led most matches) gets a tiny
+# losing-state action sample, which makes their raw_prs noisy in either direction -- a single
+# good or bad sequence while behind can swing it. Median losing-state sample size across all 64
+# teams is ~975 actions; below this threshold the PRS value should be shown with a caveat rather
+# than presented as equally reliable.
+LOW_SAMPLE_THRESHOLD = 300
+
 
 def normalize_0_100(series, mask):
     """Min-max normalize to 0-100 using only rows where mask is True; others -> NaN."""
@@ -61,6 +68,41 @@ def build_teams_historical(features):
     df["ppi_rank"] = df.groupby("tournament")["ppi"].rank(ascending=False, method="min")
     df["prs_rank"] = df["prs_rank"].astype("Int64")
     df["ppi_rank"] = df["ppi_rank"].astype("Int64")
+
+    df["losing_sample_size"] = (
+        df["action_count_losing_close"].fillna(0) + df["action_count_losing_big"].fillna(0)
+    ).astype(int)
+    df["low_sample_warning"] = df["sufficient_data"] & (df["losing_sample_size"] < LOW_SAMPLE_THRESHOLD)
+
+    combined_rank = df.sort_values("prs", ascending=False, na_position="last").index
+    combined_rank_map = {idx: i + 1 for i, idx in enumerate(combined_rank)}
+    df["combined_prs_rank"] = df.index.map(combined_rank_map)
+
+    def surprising_result_note(row):
+        if not row["sufficient_data"] or row["tournament_result"] not in ("Winner", "Runner-Up"):
+            return None
+        if row["combined_prs_rank"] <= 16:
+            return None
+        achievement = (
+            f"won the {row['tournament']} World Cup"
+            if row["tournament_result"] == "Winner"
+            else f"reached the {row['tournament']} World Cup final"
+        )
+        if row["low_sample_warning"]:
+            cause = (
+                f"while rarely trailing on the scoreboard (only {row['losing_sample_size']} "
+                "losing-state actions all tournament) -- limited opportunity to show resilience, "
+                "not a weak team"
+            )
+        else:
+            cause = (
+                "without their VAEP output while behind ever being exceptional relative to the "
+                "rest of the field -- PRS measures relative elevation under pressure, not whether "
+                "a team ultimately won"
+            )
+        return f"{row['team_name']} {achievement} {cause}."
+
+    df["surprising_result_note"] = df.apply(surprising_result_note, axis=1)
 
     for col in ["ppi", "group_vaep_avg", "knockout_vaep_avg", "stage_retention"]:
         df[col] = df[col].round(4)
@@ -204,9 +246,10 @@ if __name__ == "__main__":
 
     output_cols = [
         "team_id", "team_name", "flag_emoji", "tournament", "prs", "adj_prs", "ppi",
-        "ppi_rank", "prs_rank", "stage_retention", "quadrant", "matches_played",
+        "ppi_rank", "prs_rank", "combined_prs_rank", "stage_retention", "quadrant", "matches_played",
         "group_vaep_avg", "knockout_vaep_avg", "reached_final", "tournament_result",
-        "fifa_rank", "match_timeline_json",
+        "fifa_rank", "losing_sample_size", "low_sample_warning", "surprising_result_note",
+        "match_timeline_json",
     ]
     teams_df[output_cols].to_parquet(f"{DATA_DIR}/teams_historical.parquet")
     print(f"Saved teams_historical.parquet: {len(teams_df)} rows")

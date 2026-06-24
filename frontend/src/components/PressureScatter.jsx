@@ -38,6 +38,14 @@ function CustomTooltip({ active, payload }) {
       <div style={{ fontFamily: 'var(--font-mono)' }}>Adj PRS: {team.adj_prs ?? '—'}</div>
       <div style={{ fontFamily: 'var(--font-mono)' }}>PPI: {team.ppi ?? '—'}</div>
       <div style={{ color: 'var(--text-muted)', marginTop: 4 }}>{team.quadrant ?? 'insufficient data'}</div>
+      {team.low_sample_warning && (
+        <div style={{ color: 'var(--neutral)', marginTop: 4 }}>
+          ⚠ small sample ({team.losing_sample_size} losing-state actions)
+        </div>
+      )}
+      {team.surprising_result_note && (
+        <div style={{ color: 'var(--accent)', marginTop: 4, maxWidth: 220 }}>ⓘ {team.surprising_result_note}</div>
+      )}
     </div>
   )
 }

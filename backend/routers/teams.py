@@ -40,6 +40,10 @@ def team_to_dict(row):
         "knockout_vaep_avg": safe_float(row["knockout_vaep_avg"]),
         "reached_final": bool(row["reached_final"]),
         "tournament_result": row["tournament_result"],
+        "combined_prs_rank": int(row["combined_prs_rank"]) if row["combined_prs_rank"] == row["combined_prs_rank"] else None,
+        "losing_sample_size": int(row["losing_sample_size"]),
+        "low_sample_warning": bool(row["low_sample_warning"]),
+        "surprising_result_note": row["surprising_result_note"] if isinstance(row["surprising_result_note"], str) else None,
     }
 
 
