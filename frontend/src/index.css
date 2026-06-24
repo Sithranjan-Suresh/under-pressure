@@ -1,28 +1,48 @@
 :root {
-  --bg-base: #0a0c10;
-  --bg-surface: #13161f;
-  --bg-elevated: #1c2030;
-  --bg-border: #252a3a;
-  --accent: #00c896;
-  --accent-dim: rgba(0, 200, 150, 0.12);
-  --accent-border: rgba(0, 200, 150, 0.35);
-  --danger: #f23557;
-  --danger-dim: rgba(242, 53, 87, 0.12);
-  --win: #36f5a8;
-  --win-dim: rgba(54, 245, 168, 0.12);
-  --neutral: #f5a623;
-  --neutral-dim: rgba(245, 166, 35, 0.12);
-  --text-primary: #edf0f7;
-  --text-muted: #6b7280;
-  --text-faint: #2e3447;
-  --elite: #00c896;
-  --pretenders: #f5a623;
-  --grinders: #36f5a8;
-  --fragile: #f23557;
+  /* New palette (spec) */
+  --bg-primary: #080c10;
+  --bg-secondary: #0d1117;
+  --bg-card: #161b22;
+  --bg-hover: #1c2128;
+  --accent-teal: #00d4aa;
+  --accent-amber: #f59e0b;
+  --accent-red: #ef4444;
+  --accent-blue: #3b82f6;
+  --border: #21262d;
+  --elite: #00d4aa;
+  --pretenders: #f59e0b;
+  --grinders: #3b82f6;
+  --fragile: #ef4444;
 
-  --font-display: 'Space Grotesk', sans-serif;
+  /* Legacy variable names kept as aliases so existing component styles inherit the new
+     palette without needing every inline style rewritten. */
+  --bg-base: var(--bg-primary);
+  --bg-surface: var(--bg-card);
+  --bg-elevated: var(--bg-hover);
+  --bg-border: var(--border);
+  --accent: var(--accent-teal);
+  --accent-dim: rgba(0, 212, 170, 0.12);
+  --accent-border: rgba(0, 212, 170, 0.35);
+  --danger: var(--accent-red);
+  --danger-dim: rgba(239, 68, 68, 0.12);
+  --win: var(--accent-teal);
+  --win-dim: rgba(0, 212, 170, 0.12);
+  --neutral: var(--accent-amber);
+  --neutral-dim: rgba(245, 158, 11, 0.12);
+
+  --text-primary: #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted: #8b949e;
+  --text-faint: #484f58;
+
+  --font-display: 'Barlow Condensed', sans-serif;
   --font-body: 'Inter', sans-serif;
-  --font-mono: 'Space Mono', monospace;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-6: 48px;
 }
 
 *,
@@ -38,10 +58,12 @@ body {
 }
 
 body {
-  background-color: var(--bg-base);
-  background-image: radial-gradient(circle at 50% 0%, rgba(0, 200, 150, 0.06), transparent 60%);
+  background-color: var(--bg-primary);
+  background-image: radial-gradient(circle at 50% 0%, rgba(0, 212, 170, 0.05), transparent 60%);
   color: var(--text-primary);
   font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 @keyframes shimmer {
@@ -50,6 +72,25 @@ body {
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-60px, -60px);
   }
 }
 
@@ -66,9 +107,36 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
+  font-weight: 700;
   margin: 0;
 }
 
 a {
   color: inherit;
+}
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: var(--space-3);
+  transition: background 150ms;
+}
+
+.card:hover {
+  background: var(--bg-hover);
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--accent-teal);
+  z-index: 1000;
+  transition: width 80ms linear;
 }

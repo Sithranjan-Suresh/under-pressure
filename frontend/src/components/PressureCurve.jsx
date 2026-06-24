@@ -7,6 +7,7 @@ import {
   ReferenceLine,
   Tooltip,
   Dot,
+  Label,
 } from 'recharts'
 
 const STATE_COLOR = {
@@ -44,10 +45,19 @@ export default function PressureCurve({ curve }) {
               stroke="var(--bg-border)"
             />
             <YAxis
-              tickFormatter={(v) => v.toFixed(4)}
+              tickFormatter={(v) => (v * 1000).toFixed(1)}
               tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
               stroke="var(--bg-border)"
-            />
+            >
+              <Label
+                value="VAEP Rate (×10⁻³)"
+                angle={-90}
+                position="insideLeft"
+                fill="var(--text-muted)"
+                fontSize={11}
+                style={{ textAnchor: 'middle' }}
+              />
+            </YAxis>
             <Tooltip
               formatter={(value) => (value == null ? '—' : value.toFixed(4))}
               contentStyle={{ background: 'var(--bg-surface)', border: '1px solid var(--accent)' }}

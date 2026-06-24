@@ -48,18 +48,30 @@ export default function MatchVaepBars({ match }) {
     </div>
   )
 
+  const higherTeam = homeHigher ? home_team : awayHigher ? away_team : null
+  const higherVaep = homeHigher ? home_vaep_avg : awayHigher ? away_vaep_avg : null
+  const lowerVaep = homeHigher ? away_vaep_avg : awayHigher ? home_vaep_avg : null
+  const ratio = higherVaep != null && lowerVaep != null && lowerVaep > 0 ? higherVaep / lowerVaep : null
+  const won =
+    higherTeam &&
+    ((home_score > away_score && homeHigher) || (away_score > home_score && awayHigher))
+
   return (
     <div>
       <Row team={home_team} score={home_score} vaep={home_vaep_avg} isWinner={homeHigher} />
       <Row team={away_team} score={away_score} vaep={away_vaep_avg} isWinner={awayHigher} />
-      <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 8 }}>
-        {homeHigher && `${home_team} generated more possession value (VAEP) — `}
-        {awayHigher && `${away_team} generated more possession value (VAEP) — `}
-        {homeHigher || awayHigher
-          ? (home_score > away_score && homeHigher) || (away_score > home_score && awayHigher)
-            ? 'and won the match.'
-            : 'but did not win the match.'
-          : 'VAEP averages were effectively tied.'}
+      <p className="card" style={{ fontSize: 13, marginTop: 12, borderLeft: '3px solid var(--accent-teal)', padding: '10px 14px' }}>
+        {higherTeam ? (
+          <>
+            <strong>{higherTeam}</strong> dominated possession quality (
+            <span className="mono">{higherVaep.toFixed(4)}</span> vs{' '}
+            <span className="mono">{lowerVaep.toFixed(4)}</span>)
+            {ratio != null && ratio >= 1.5 && ` — a ${ratio.toFixed(0)}× difference`} — and{' '}
+            {won ? 'won' : 'did not win'} {home_score}-{away_score}.
+          </>
+        ) : (
+          'VAEP averages were effectively tied.'
+        )}
       </p>
     </div>
   )

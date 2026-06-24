@@ -26,24 +26,23 @@ export default function MatchBrowser() {
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto' }}>
       <h1>
-        The <span style={{ color: 'var(--accent)' }}>95%</span>, match by match
+        The <span style={{ color: 'var(--accent-teal)' }}>95%</span>, match by match
       </h1>
-      <p style={{ color: 'var(--text-muted)', maxWidth: 640 }}>
+      <p style={{ color: 'var(--text-secondary)', maxWidth: 640 }}>
         Every WC2018 + WC2022 match. Click one to see each team's match-average VAEP — the metric
         behind the 95% finding — with the higher value highlighted.
       </p>
 
-      <div style={{ margin: '16px 0' }}>
+      <div style={{ margin: '16px 0', display: 'flex', gap: 8 }}>
         {['All', '2022', '2018'].map((opt) => (
           <button
             key={opt}
             onClick={() => setTournament(opt)}
             style={{
-              marginRight: 8,
               padding: '6px 14px',
               borderRadius: 6,
-              border: tournament === opt ? '1px solid var(--accent)' : '1px solid var(--bg-border)',
-              background: tournament === opt ? 'var(--accent-dim)' : 'var(--bg-surface)',
+              border: tournament === opt ? '1px solid var(--accent-teal)' : '1px solid var(--border)',
+              background: tournament === opt ? 'var(--accent-dim)' : 'var(--bg-card)',
               color: 'var(--text-primary)',
               cursor: 'pointer',
             }}
@@ -54,7 +53,7 @@ export default function MatchBrowser() {
       </div>
 
       {!matches ? (
-        <p style={{ color: 'var(--text-muted)' }}>Loading matches...</p>
+        <p style={{ color: 'var(--text-secondary)' }}>Loading matches...</p>
       ) : (
         <div
           style={{
@@ -68,48 +67,65 @@ export default function MatchBrowser() {
             style={{
               maxHeight: 600,
               overflowY: 'auto',
-              border: '1px solid var(--bg-border)',
+              border: '1px solid var(--border)',
               borderRadius: 10,
             }}
           >
-            {filtered.map((m) => (
-              <div
-                key={m.match_id}
-                onClick={() => setSelectedId(m.match_id)}
-                style={{
-                  padding: '10px 14px',
-                  borderBottom: '1px solid var(--bg-border)',
-                  cursor: 'pointer',
-                  background:
-                    selected?.match_id === m.match_id ? 'var(--bg-elevated)' : 'transparent',
-                  borderLeft:
-                    selected?.match_id === m.match_id
-                      ? '3px solid var(--accent)'
-                      : '3px solid transparent',
-                }}
-              >
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 4 }}>
-                  {m.tournament} · {m.stage}
+            {filtered.map((m) => {
+              const homeHigher =
+                m.home_vaep_avg != null && m.away_vaep_avg != null && m.home_vaep_avg > m.away_vaep_avg
+              const awayHigher =
+                m.home_vaep_avg != null && m.away_vaep_avg != null && m.away_vaep_avg > m.home_vaep_avg
+              const Dot = () => (
+                <span
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: '50%',
+                    background: 'var(--accent-teal)',
+                    display: 'inline-block',
+                  }}
+                />
+              )
+              return (
+                <div
+                  key={m.match_id}
+                  onClick={() => setSelectedId(m.match_id)}
+                  style={{
+                    padding: '10px 14px',
+                    borderBottom: '1px solid var(--border)',
+                    cursor: 'pointer',
+                    background:
+                      selected?.match_id === m.match_id ? 'var(--bg-hover)' : 'transparent',
+                    borderLeft:
+                      selected?.match_id === m.match_id
+                        ? '3px solid var(--accent-teal)'
+                        : '3px solid transparent',
+                  }}
+                >
+                  <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginBottom: 4 }}>
+                    {m.tournament} · {m.stage}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
+                    <Flag teamName={m.home_team} width={16} />
+                    {homeHigher && <Dot />}
+                    <span style={{ flex: 1 }}>{m.home_team}</span>
+                    <span className="mono">{m.home_score}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, marginTop: 2 }}>
+                    <Flag teamName={m.away_team} width={16} />
+                    {awayHigher && <Dot />}
+                    <span style={{ flex: 1 }}>{m.away_team}</span>
+                    <span className="mono">{m.away_score}</span>
+                  </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14 }}>
-                  <Flag teamName={m.home_team} width={16} />
-                  <span style={{ flex: 1 }}>{m.home_team}</span>
-                  <span style={{ fontFamily: 'var(--font-mono)' }}>{m.home_score}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, marginTop: 2 }}>
-                  <Flag teamName={m.away_team} width={16} />
-                  <span style={{ flex: 1 }}>{m.away_team}</span>
-                  <span style={{ fontFamily: 'var(--font-mono)' }}>{m.away_score}</span>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
 
           <div
+            className="card"
             style={{
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--bg-border)',
-              borderRadius: 10,
               padding: 24,
               position: 'sticky',
               top: 80,
@@ -117,13 +133,13 @@ export default function MatchBrowser() {
           >
             {selected ? (
               <>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 12 }}>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 12 }}>
                   {selected.tournament} · {selected.stage}
                 </div>
                 <MatchVaepBars match={selected} />
               </>
             ) : (
-              <p style={{ color: 'var(--text-muted)' }}>Select a match to see the VAEP comparison.</p>
+              <p style={{ color: 'var(--text-secondary)' }}>Select a match to see the VAEP comparison.</p>
             )}
           </div>
         </div>

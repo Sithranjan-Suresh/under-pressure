@@ -19,7 +19,7 @@ export default function TeamDetail() {
 
   return (
     <div>
-      <Link to="/" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
+      <Link to="/home" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>
         ← Back
       </Link>
 
@@ -86,14 +86,14 @@ export default function TeamDetail() {
 
       {team.pressure_insight && (
         <div
+          className="card"
           style={{
             marginTop: 32,
-            background: 'var(--accent-dim)',
-            border: '1px solid var(--accent-border)',
-            borderRadius: 10,
-            padding: 16,
-            fontFamily: 'var(--font-mono)',
-            fontSize: 14,
+            borderLeft: '3px solid var(--accent-teal)',
+            background: 'var(--bg-secondary)',
+            padding: '20px 24px',
+            fontSize: 17,
+            lineHeight: 1.6,
           }}
         >
           {team.pressure_insight}

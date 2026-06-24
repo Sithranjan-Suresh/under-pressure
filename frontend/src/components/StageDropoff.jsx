@@ -5,6 +5,8 @@ export default function StageDropoff({ groupVaep, knockoutVaep }) {
 
   const maxVal = Math.max(groupVaep, knockoutVaep, 0.0001)
   const retentionPct = (knockoutVaep / groupVaep) * 100
+  const changePct = retentionPct - 100
+  const isPositive = changePct >= 0
   const retentionColor = retentionPct >= 95 ? 'var(--win)' : retentionPct >= 80 ? 'var(--neutral)' : 'var(--danger)'
   const knockoutColor = knockoutVaep >= groupVaep ? 'var(--win)' : 'var(--danger)'
 
@@ -29,8 +31,25 @@ export default function StageDropoff({ groupVaep, knockoutVaep }) {
     <div>
       <Bar label="Group Stage" value={groupVaep} color="var(--neutral)" />
       <Bar label="Knockouts" value={knockoutVaep} color={knockoutColor} />
-      <div style={{ marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 28, color: retentionColor }}>
-        Stage Retention: {retentionPct.toFixed(0)}%
+      <div
+        className="card"
+        style={{
+          marginTop: 16,
+          borderLeft: `3px solid ${isPositive ? 'var(--win)' : 'var(--danger)'}`,
+          padding: '14px 18px',
+        }}
+      >
+        <div style={{ fontSize: 12, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+          Stage Retention
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 4 }}>
+          <span className="mono" style={{ fontSize: 28, fontWeight: 600, color: retentionColor }}>
+            {retentionPct.toFixed(0)}%
+          </span>
+          <span className="mono" style={{ fontSize: 13, color: isPositive ? 'var(--win)' : 'var(--danger)' }}>
+            {isPositive ? '+' : ''}{changePct.toFixed(0)}% vs. group stage
+          </span>
+        </div>
       </div>
     </div>
   )
