@@ -1,0 +1,9 @@
+pandas
+pyarrow
+statsbombpy
+socceraction
+multimethod>=1.4,<1.10
+scipy
+scikit-learn
+xgboost
+statsmodels

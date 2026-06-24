@@ -1,0 +1,60 @@
+:root {
+  --bg-base: #0a0c10;
+  --bg-surface: #13161f;
+  --bg-elevated: #1c2030;
+  --bg-border: #252a3a;
+  --accent: #00c896;
+  --accent-dim: rgba(0, 200, 150, 0.12);
+  --accent-border: rgba(0, 200, 150, 0.35);
+  --danger: #f23557;
+  --danger-dim: rgba(242, 53, 87, 0.12);
+  --win: #36f5a8;
+  --win-dim: rgba(54, 245, 168, 0.12);
+  --neutral: #f5a623;
+  --neutral-dim: rgba(245, 166, 35, 0.12);
+  --text-primary: #edf0f7;
+  --text-muted: #6b7280;
+  --text-faint: #2e3447;
+  --elite: #00c896;
+  --pretenders: #f5a623;
+  --grinders: #36f5a8;
+  --fragile: #f23557;
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+#root {
+  min-height: 100svh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}

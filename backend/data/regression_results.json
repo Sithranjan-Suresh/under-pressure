@@ -1,0 +1,98 @@
+{
+  "primary_finding": {
+    "metric": "match_vaep_winner_accuracy",
+    "description": "Fraction of decisive (non-drawn) WC2018+2022 matches won by the team with the higher match-level average VAEP.",
+    "decisive_matches": 100,
+    "higher_vaep_wins": 95,
+    "decisive_accuracy": 0.95,
+    "all_matches_accuracy_incl_draws": 0.7422,
+    "total_matches": 128,
+    "draws": 28,
+    "by_tournament": {
+      "2022": {
+        "decisive_matches": 49,
+        "higher_vaep_wins": 47,
+        "accuracy": 0.9592
+      },
+      "2018": {
+        "decisive_matches": 51,
+        "higher_vaep_wins": 48,
+        "accuracy": 0.9412
+      }
+    },
+    "headline": "The team with the higher match-level VAEP average won 95.0% of decisive matches across WC 2018 and WC 2022 (95 of 100)."
+  },
+  "headline": "The team with the higher match-level VAEP average won 95.0% of decisive matches across WC 2018 and WC 2022 (95 of 100).",
+  "prs_analysis": {
+    "framing": "secondary descriptive metric -- not the project's primary claim",
+    "model_prs_only": {
+      "pseudo_r2": 0.021,
+      "aic": 84.1,
+      "n": 59,
+      "predictor": "PRS",
+      "odds_ratio": 0.698,
+      "ci_lower": 0.398,
+      "ci_upper": 1.224,
+      "p_value": 0.209
+    },
+    "model_fifa_only": {
+      "pseudo_r2": 0.028,
+      "aic": 83.5,
+      "n": 59,
+      "predictor": "FIFA_rank",
+      "odds_ratio": 1.542,
+      "ci_lower": 0.843,
+      "ci_upper": 2.821,
+      "p_value": 0.16
+    },
+    "model_combined": {
+      "pseudo_r2": 0.062,
+      "aic": 86.7,
+      "n": 59,
+      "predictors": [
+        "PRS",
+        "FIFA_rank",
+        "stage_retention",
+        "ppi"
+      ],
+      "coefficients": {
+        "PRS": {
+          "odds_ratio": 0.85,
+          "ci_lower": 0.452,
+          "ci_upper": 1.6,
+          "p_value": 0.615
+        },
+        "FIFA_rank": {
+          "odds_ratio": 1.52,
+          "ci_lower": 0.822,
+          "ci_upper": 2.809,
+          "p_value": 0.182
+        },
+        "stage_retention": {
+          "odds_ratio": 0.695,
+          "ci_lower": 0.31,
+          "ci_upper": 1.557,
+          "p_value": 0.376
+        },
+        "ppi": {
+          "odds_ratio": 1.466,
+          "ci_lower": 0.686,
+          "ci_upper": 3.13,
+          "p_value": 0.323
+        }
+      }
+    },
+    "model_adj_prs_only": {
+      "pseudo_r2": 0.013,
+      "aic": 84.7,
+      "n": 59,
+      "predictor": "adj_PRS",
+      "odds_ratio": 0.755,
+      "ci_lower": 0.433,
+      "ci_upper": 1.314,
+      "p_value": 0.32
+    },
+    "headline": "As a secondary, descriptive check: PRS explains 2.1% of round-level knockout exit variance vs 2.8% for FIFA ranking alone -- in this sample, FIFA ranking was at least as predictive, so PRS is not reported as outperforming it.",
+    "n_team_rounds": 59
+  }
+}

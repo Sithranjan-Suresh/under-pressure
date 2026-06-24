@@ -1,0 +1,33 @@
+{
+  "regression_feature_scaling": {
+    "raw_prs": {
+      "mean": 0.00028,
+      "std": 0.003427
+    },
+    "fifa_rank": {
+      "mean": 13.830508,
+      "std": 13.280985
+    },
+    "stage_retention": {
+      "mean": 0.718026,
+      "std": 1.414142
+    },
+    "ppi": {
+      "mean": 0.001112,
+      "std": 0.000918
+    },
+    "adj_prs_raw": {
+      "mean": 0.000201,
+      "std": 0.003746
+    }
+  },
+  "prs_median": 60.8,
+  "ppi_median": 0.001,
+  "tournaments_included": [
+    "2018",
+    "2022"
+  ],
+  "total_teams": 64,
+  "total_actions": 267430,
+  "pipeline_run_date": "2026-06-23"
+}

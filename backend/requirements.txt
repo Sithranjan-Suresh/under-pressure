@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+pandas
+pyarrow
+python-dotenv
+httpx
+scipy
+scikit-learn
+statsbombpy
+socceraction
