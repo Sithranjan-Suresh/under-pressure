@@ -1,6 +1,7 @@
 import json
 import math
 
+import pandas as pd
 from fastapi import APIRouter, HTTPException, Request
 
 router = APIRouter()
@@ -15,13 +16,15 @@ CANONICAL_STATES = [
 
 
 def safe_float(val):
-    if val is None:
+    if val is None or pd.isna(val):
         return None
-    try:
-        f = float(val)
-    except (TypeError, ValueError):
+    return float(val)
+
+
+def safe_int(val):
+    if val is None or pd.isna(val):
         return None
-    return None if math.isnan(f) else f
+    return int(val)
 
 
 def team_to_dict(row):
@@ -40,7 +43,7 @@ def team_to_dict(row):
         "knockout_vaep_avg": safe_float(row["knockout_vaep_avg"]),
         "reached_final": bool(row["reached_final"]),
         "tournament_result": row["tournament_result"],
-        "combined_prs_rank": int(row["combined_prs_rank"]) if row["combined_prs_rank"] == row["combined_prs_rank"] else None,
+        "combined_prs_rank": safe_int(row["combined_prs_rank"]),
         "losing_sample_size": int(row["losing_sample_size"]),
         "low_sample_warning": bool(row["low_sample_warning"]),
         "surprising_result_note": row["surprising_result_note"] if isinstance(row["surprising_result_note"], str) else None,
@@ -71,9 +74,9 @@ def get_team(team_id: str, request: Request):
 
     row = match.iloc[0]
     result = team_to_dict(row)
-    result["prs_rank"] = int(row["prs_rank"]) if row["prs_rank"] == row["prs_rank"] else None
-    result["ppi_rank"] = int(row["ppi_rank"]) if row["ppi_rank"] == row["ppi_rank"] else None
-    result["fifa_rank"] = int(row["fifa_rank"]) if row["fifa_rank"] == row["fifa_rank"] else None
+    result["prs_rank"] = safe_int(row["prs_rank"])
+    result["ppi_rank"] = safe_int(row["ppi_rank"])
+    result["fifa_rank"] = safe_int(row["fifa_rank"])
 
     team_curves = curves[curves["team_id"] == row["team_id"]].set_index("state")
     pressure_curve = []
