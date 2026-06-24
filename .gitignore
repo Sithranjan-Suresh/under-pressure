@@ -14,3 +14,7 @@ frontend/.env.local
 run_*.log
 
 .claude/
+
+UNDER_PRESSURE_Engineering_Spec.md
+UNDER_PRESSURE_Full_Context.md
+DESIGN_AND_FEATURES.md
