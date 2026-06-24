@@ -18,8 +18,15 @@ const TEAM_TO_FLAG_CODE = {
   Turkey: 'tr', Uzbekistan: 'uz',
 }
 
+// flagcdn.com only serves a fixed set of preset widths -- requesting any other width 404s.
+const AVAILABLE_WIDTHS = [20, 40, 80, 160, 320, 640, 1280, 2560]
+
+function nearestAvailableWidth(width) {
+  return AVAILABLE_WIDTHS.find((w) => w >= width) || AVAILABLE_WIDTHS[AVAILABLE_WIDTHS.length - 1]
+}
+
 export function getFlagUrl(teamName, width = 40) {
   const code = TEAM_TO_FLAG_CODE[teamName]
   if (!code) return null
-  return `https://flagcdn.com/w${width}/${code}.png`
+  return `https://flagcdn.com/w${nearestAvailableWidth(width)}/${code}.png`
 }
