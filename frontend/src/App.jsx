@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import TeamDetail from './pages/TeamDetail'
 import Live2026 from './pages/Live2026'
 import Methodology from './pages/Methodology'
+import MatchBrowser from './pages/MatchBrowser'
 
 const navLinkStyle = ({ isActive }) => ({
   padding: '16px 0',
@@ -34,6 +35,9 @@ function App() {
         <NavLink to="/" style={navLinkStyle} end>
           2022 Analysis
         </NavLink>
+        <NavLink to="/matches" style={navLinkStyle}>
+          Matches
+        </NavLink>
         <NavLink to="/live" style={navLinkStyle}>
           2026 Live
         </NavLink>
@@ -45,6 +49,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/team/:teamId" element={<TeamDetail />} />
+          <Route path="/matches" element={<MatchBrowser />} />
           <Route path="/live" element={<Live2026 />} />
           <Route path="/methodology" element={<Methodology />} />
         </Routes>

@@ -82,22 +82,40 @@ async def _fetch_proxy_prs():
     if not finished:
         return pd.DataFrame()
 
+    # football-data.org's free tier only gives halfTime/fullTime scores, not a minute-by-minute
+    # goal timeline. Using the FINAL result to decide who "scored while trailing" is wrong: it
+    # credits a team only if they lost overall, missing every team that fell behind and came
+    # back to win or draw (e.g. a team down 0-1 at half time that scores twice in the second
+    # half to win 2-1 clearly scored while trailing, but the old logic gave them zero credit).
+    #
+    # The fix: use the half-time score as a real mid-match checkpoint. If a team was behind at
+    # half time, credit them with every goal they scored in the second half (fullTime - halfTime)
+    # as "scored while trailing" -- the first such goal is unambiguously scored while behind; a
+    # second one technically might come after they'd already equalized, so this slightly
+    # over-credits long comebacks, but it is honest about being a coarse, half/full-time-based
+    # proxy rather than claiming false precision. It is the most accurate signal extractable from
+    # the data this API tier actually provides.
     trailing_goals = {}
     matches_played = {}
     for m in finished:
         home = m["homeTeam"]["name"]
         away = m["awayTeam"]["name"]
-        home_score = m["score"]["fullTime"]["home"]
-        away_score = m["score"]["fullTime"]["away"]
+        ht_home = m["score"]["halfTime"]["home"]
+        ht_away = m["score"]["halfTime"]["away"]
+        ft_home = m["score"]["fullTime"]["home"]
+        ft_away = m["score"]["fullTime"]["away"]
         matches_played[home] = matches_played.get(home, 0) + 1
         matches_played[away] = matches_played.get(away, 0) + 1
         trailing_goals.setdefault(home, 0)
         trailing_goals.setdefault(away, 0)
-        if home_score is not None and away_score is not None:
-            if home_score < away_score:
-                trailing_goals[home] += home_score
-            if away_score < home_score:
-                trailing_goals[away] += away_score
+
+        if None in (ht_home, ht_away, ft_home, ft_away):
+            continue
+
+        if ht_home < ht_away:
+            trailing_goals[home] += max(0, ft_home - ht_home)
+        if ht_away < ht_home:
+            trailing_goals[away] += max(0, ft_away - ht_away)
 
     teams = list(matches_played.keys())
     raw_values = pd.Series({t: trailing_goals.get(t, 0) for t in teams})

@@ -39,8 +39,22 @@ body {
 
 body {
   background-color: var(--bg-base);
+  background-image: radial-gradient(circle at 50% 0%, rgba(0, 200, 150, 0.06), transparent 60%);
   color: var(--text-primary);
   font-family: var(--font-body);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+button {
+  font-family: inherit;
 }
 
 #root {

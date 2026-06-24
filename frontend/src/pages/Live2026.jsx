@@ -25,9 +25,14 @@ export default function Live2026() {
           margin: '16px 0',
         }}
       >
-        2026 PRS is a results-based proxy (goals scored while trailing, normalized 0–100) — it is
-        not VAEP-derived, and will be replaced by the full VAEP model once the tournament
-        concludes. Do not compare these values directly to the 2018/2022 historical PRS scores.
+        2026 PRS is a results-based proxy, not VAEP-derived: for each match we compare the
+        half-time score to the full-time score, and credit a team with every second-half goal
+        scored in matches where they were behind at half time, normalized 0–100. It can only see
+        comebacks that span the half-time break — a team that fell behind and recovered entirely
+        within a single half won't be credited, because the live data feed only gives
+        half-time/full-time scores, not a goal-by-goal timeline. It will be replaced by the full
+        VAEP model once the tournament concludes. Do not compare these values directly to the
+        2018/2022 historical PRS scores.
       </div>
 
       {error && <p>Could not load live data.</p>}

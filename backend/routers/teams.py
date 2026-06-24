@@ -47,6 +47,7 @@ def team_to_dict(row):
         "losing_sample_size": int(row["losing_sample_size"]),
         "low_sample_warning": bool(row["low_sample_warning"]),
         "surprising_result_note": row["surprising_result_note"] if isinstance(row["surprising_result_note"], str) else None,
+        "pressure_insight": row["pressure_insight"] if isinstance(row["pressure_insight"], str) else None,
     }
 
 

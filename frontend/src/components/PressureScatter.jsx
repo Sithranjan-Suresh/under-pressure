@@ -61,11 +61,17 @@ export default function PressureScatter({ teams, onTeamClick, prsMedian, ppiMedi
 
   return (
     <div style={{ position: 'relative', width: '100%', height: 480 }}>
+      {/*
+        Positioned at the center of each quadrant of the actual plot area, not the whole
+        container -- Recharts reserves a left gutter for Y-axis tick labels (~8% of width) and a
+        bottom gutter for X-axis tick labels (~10% of height) beyond the explicit chart margins,
+        so naive 0%/50%/100% placement drifts off the real quadrant centers.
+      */}
       {[
-        { label: 'ELITE', top: 0, left: '52%' },
-        { label: 'PRETENDERS', top: 0, left: '2%' },
-        { label: 'GRINDERS', top: '70%', left: '52%' },
-        { label: 'FRAGILE', top: '70%', left: '2%' },
+        { label: 'ELITE', top: '25%', left: '74%' },
+        { label: 'PRETENDERS', top: '25%', left: '30%' },
+        { label: 'GRINDERS', top: '68%', left: '74%' },
+        { label: 'FRAGILE', top: '68%', left: '30%' },
       ].map((q) => (
         <div
           key={q.label}
@@ -73,13 +79,16 @@ export default function PressureScatter({ teams, onTeamClick, prsMedian, ppiMedi
             position: 'absolute',
             top: q.top,
             left: q.left,
+            transform: 'translate(-50%, -50%)',
             fontFamily: 'var(--font-display)',
             fontWeight: 700,
-            fontSize: 28,
+            fontSize: 30,
+            letterSpacing: 1,
             color: 'var(--text-primary)',
-            opacity: 0.08,
+            opacity: 0.16,
             pointerEvents: 'none',
             zIndex: 0,
+            whiteSpace: 'nowrap',
           }}
         >
           {q.label}

@@ -6,17 +6,6 @@ import StageDropoff from '../components/StageDropoff'
 import TournamentTimeline from '../components/TournamentTimeline'
 import Flag from '../components/Flag'
 
-const INSIGHTS = {
-  elite: (name) =>
-    `${name} generates high possession value and sustains it under pressure — their VAEP rises when losing, not falls.`,
-  pretenders: (name) =>
-    `${name} peaks in low-pressure situations but shows a measurable VAEP drop in deficit states. Their performance on the scoresheet overstates their resilience.`,
-  grinders: (name) =>
-    `${name}'s baseline output is modest, but their VAEP rate holds steady — or rises — when chasing a deficit. A dangerous team to face when they're behind.`,
-  fragile: (name) =>
-    `${name}'s possession value collapses under pressure. Their tournament exits tend to follow the first moment they fall behind.`,
-}
-
 export default function TeamDetail() {
   const { teamId } = useParams()
   const { data: team, loading, error } = useTeam(teamId)
@@ -95,7 +84,7 @@ export default function TeamDetail() {
       <h3 style={{ marginTop: 32 }}>Tournament Timeline</h3>
       <TournamentTimeline timeline={team.match_timeline} teamName={team.team_name} />
 
-      {team.quadrant && (
+      {team.pressure_insight && (
         <div
           style={{
             marginTop: 32,
@@ -103,9 +92,11 @@ export default function TeamDetail() {
             border: '1px solid var(--accent-border)',
             borderRadius: 10,
             padding: 16,
+            fontFamily: 'var(--font-mono)',
+            fontSize: 14,
           }}
         >
-          {INSIGHTS[team.quadrant](team.team_name)}
+          {team.pressure_insight}
         </div>
       )}
     </div>

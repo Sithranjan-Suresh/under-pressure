@@ -104,6 +104,76 @@ def build_teams_historical(features):
 
     df["surprising_result_note"] = df.apply(surprising_result_note, axis=1)
 
+    def losing_state_rate(row):
+        rates = [r for r in (row["vaep_rate_losing_close"], row["vaep_rate_losing_big"]) if pd.notna(r)]
+        return sum(rates) / len(rates) if rates else None
+
+    df["losing_state_rate"] = df.apply(losing_state_rate, axis=1)
+    df["pressure_multiplier"] = df.apply(
+        lambda r: r["losing_state_rate"] / r["ppi"]
+        if r["sufficient_data"] and r["losing_state_rate"] is not None and r["ppi"] not in (None, 0) and r["ppi"] > 0
+        else None,
+        axis=1,
+    )
+
+    # Rank teams within their own tournament by multiplier, separately for "elevates under
+    # pressure" (multiplier > 1, ranked descending -- biggest elevation first) and "collapses
+    # under pressure" (multiplier < 1, ranked ascending -- biggest collapse first), so the
+    # insight sentence can honestly say "the Nth-largest elevation/collapse of any {tournament}
+    # team" instead of always claiming "the largest".
+    elevates_mask = df["pressure_multiplier"] > 1
+    collapses_mask = df["pressure_multiplier"] < 1
+    df["elevation_rank"] = (
+        df[elevates_mask].groupby("tournament")["pressure_multiplier"].rank(ascending=False, method="min")
+    )
+    df["collapse_rank"] = (
+        df[collapses_mask].groupby("tournament")["pressure_multiplier"].rank(ascending=True, method="min")
+    )
+
+    def ordinal(n):
+        n = int(n)
+        if 10 <= n % 100 <= 20:
+            suffix = "th"
+        else:
+            suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+        return f"{n}{suffix}"
+
+    def pressure_insight(row):
+        if not row["sufficient_data"] or row["pressure_multiplier"] is None:
+            return (
+                f"{row['team_name']}'s losing-state sample is too small this tournament to "
+                "compute a reliable pressure profile."
+            )
+        m = row["pressure_multiplier"]
+        ppi = row["ppi"]
+        losing_rate = row["losing_state_rate"]
+        if m > 1:
+            rank = row["elevation_rank"]
+            if pd.notna(rank) and rank == 1:
+                rank_phrase = f"the largest pressure multiplier of any {row['tournament']} team"
+            elif pd.notna(rank) and rank <= 5:
+                rank_phrase = f"the {ordinal(rank)}-largest pressure multiplier of any {row['tournament']} team"
+            else:
+                rank_phrase = f"above their own baseline, but not among the largest multipliers in {row['tournament']}"
+            return (
+                f"{row['team_name']}'s VAEP rate in losing states ({losing_rate:.4f}) is "
+                f"{m:.1f}× their level-state baseline ({ppi:.4f}) — {rank_phrase}."
+            )
+        else:
+            rank = row["collapse_rank"]
+            if pd.notna(rank) and rank == 1:
+                rank_phrase = f"the steepest pressure collapse of any {row['tournament']} team"
+            elif pd.notna(rank) and rank <= 5:
+                rank_phrase = f"the {ordinal(rank)}-steepest pressure collapse of any {row['tournament']} team"
+            else:
+                rank_phrase = f"below their own baseline, though not among the steepest collapses in {row['tournament']}"
+            return (
+                f"{row['team_name']}'s VAEP rate in losing states ({losing_rate:.4f}) drops to "
+                f"{m:.1f}× their level-state baseline ({ppi:.4f}) — {rank_phrase}."
+            )
+
+    df["pressure_insight"] = df.apply(pressure_insight, axis=1)
+
     for col in ["ppi", "group_vaep_avg", "knockout_vaep_avg", "stage_retention"]:
         df[col] = df[col].round(4)
     for col in ["prs", "adj_prs"]:
@@ -249,7 +319,7 @@ if __name__ == "__main__":
         "ppi_rank", "prs_rank", "combined_prs_rank", "stage_retention", "quadrant", "matches_played",
         "group_vaep_avg", "knockout_vaep_avg", "reached_final", "tournament_result",
         "fifa_rank", "losing_sample_size", "low_sample_warning", "surprising_result_note",
-        "match_timeline_json",
+        "pressure_insight", "match_timeline_json",
     ]
     teams_df[output_cols].to_parquet(f"{DATA_DIR}/teams_historical.parquet")
     print(f"Saved teams_historical.parquet: {len(teams_df)} rows")
