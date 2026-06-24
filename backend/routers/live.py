@@ -23,6 +23,12 @@ FLAG_EMOJIS = {
     "Ecuador": "🇪🇨", "Ghana": "🇬🇭", "Germany": "🇩🇪", "Costa Rica": "🇨🇷",
     "Serbia": "🇷🇸", "Belgium": "🇧🇪", "Canada": "🇨🇦", "Cameroon": "🇨🇲",
     "Saudi Arabia": "🇸🇦", "Iran": "🇮🇷", "Qatar": "🇶🇦", "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
+    "Algeria": "🇩🇿", "Austria": "🇦🇹", "Bosnia-Herzegovina": "🇧🇦", "Cape Verde Islands": "🇨🇻",
+    "Colombia": "🇨🇴", "Congo DR": "🇨🇩", "Curaçao": "🇨🇼", "Czechia": "🇨🇿",
+    "Egypt": "🇪🇬", "Haiti": "🇭🇹", "Iraq": "🇮🇶", "Ivory Coast": "🇨🇮",
+    "Jordan": "🇯🇴", "New Zealand": "🇳🇿", "Norway": "🇳🇴", "Panama": "🇵🇦",
+    "Paraguay": "🇵🇾", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "South Africa": "🇿🇦", "Sweden": "🇸🇪",
+    "Turkey": "🇹🇷", "Uzbekistan": "🇺🇿",
 }
 
 

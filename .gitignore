@@ -5,6 +5,7 @@ backend/**/__pycache__/
 
 backend/pipeline/raw/
 backend/pipeline/processed/
+backend/.env
 
 frontend/node_modules/
 frontend/dist/

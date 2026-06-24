@@ -5,8 +5,11 @@ import sys
 from contextlib import asynccontextmanager
 
 import pandas as pd
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 from routers import live, matches, methodology, teams
 from routers.live import refresh_live_data
